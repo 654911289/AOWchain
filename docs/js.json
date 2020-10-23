@@ -1,0 +1,21 @@
+{
+  "Proposal": {
+    "step": "u32",
+    "end": "Moment",
+    "aye": "Balance",
+    "nay": "Balance"
+  },
+  "GovVote": {
+    "aye": "bool",
+    "balance": "Balance"
+  },
+  "IssueDataT": {
+    "total": "Balance",
+    "unreleased": "Balance"
+  },
+  "IssueStageT": {
+    "name": "Vec<u8>",
+    "release": "Balance",
+    "closed": "bool"
+  }
+}
