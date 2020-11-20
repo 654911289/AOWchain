@@ -5,8 +5,18 @@ license = 'Unlicense'
 name = 'pallet-gov'
 version = '0.1.0'
 
+## bs58 = { version = "0.3.0", default-features = false, features = ["alloc"] }
+[dependencies.bs58]
+default-features = false
+features = ['alloc']
+version = '0.3.0'
+
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
+
+[dependencies.serde]
+optional = true
+version = '1.0.101'
 
 [dependencies.codec]
 default-features = false
@@ -60,6 +70,7 @@ version = '2.0.0'
 [features]
 default = ['std']
 std = [
+    'serde',
     'codec/std',
     'frame-support/std',
     'frame-system/std',

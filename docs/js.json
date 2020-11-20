@@ -1,6 +1,7 @@
 {
-  "Proposal": {
+  "ProposalT": {
     "step": "u32",
+    "start": "Moment",
     "end": "Moment",
     "aye": "Balance",
     "nay": "Balance"
@@ -17,5 +18,8 @@
     "name": "Vec<u8>",
     "release": "Balance",
     "closed": "bool"
+  },
+  "OperateAccountT": {
+    "address": "Vec<u8>"
   }
 }

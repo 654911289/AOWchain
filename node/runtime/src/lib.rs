@@ -33,7 +33,7 @@ use frame_support::{
 	traits::{Currency, Imbalance, KeyOwnerProofSystem, OnUnbalanced, Randomness, LockIdentifier},
 };
 use frame_system::{EnsureRoot, EnsureOneOf};
-use frame_support::traits::InstanceFilter;
+// use frame_support::traits::InstanceFilter;
 use codec::{Encode, Decode};
 use sp_core::{
 	crypto::KeyTypeId,
@@ -104,15 +104,15 @@ pub fn wasm_binary_unwrap() -> &'static [u8] {
 
 /// Runtime version.
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("node"),
-	impl_name: create_runtime_str!("substrate-node"),
+	spec_name: create_runtime_str!("orion"),
+	impl_name: create_runtime_str!("orion-node"),
 	authoring_version: 10,
 	// Per convention: if the runtime behavior changes, increment spec_version
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-	spec_version: 259,
-	impl_version: 0,
+	spec_version: 1,
+	impl_version: 1,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 1,
 };
@@ -244,10 +244,10 @@ impl pallet_indices::Trait for Runtime {
 }
 
 parameter_types! {
-	pub const ExistentialDeposit: Balance = 1 * DOLLARS;
+	pub const ExistentialDeposit: Balance = 1 * CENTS;
 	// For weight estimation, we assume that the most locks on an individual account will be 50.
 	// This number may need to be adjusted in the future if this assumption no longer holds true.
-	pub const MaxLocks: u32 = 50;
+	pub const MaxLocks: u32 = 50; 
 }
 
 impl pallet_balances::Trait for Runtime {
@@ -736,7 +736,7 @@ construct_runtime!(
 		Scheduler: pallet_scheduler::{Module, Call, Storage, Event<T>},
 		EVM: pallet_evm::{Module, Call, Config, Storage, Event<T>},
 		Issue: pallet_issue::{Module, Call, Config<T>, Storage, Event<T>},
-		Gov: pallet_gov::{Module, Call, Storage, Event<T>},
+		Gov: pallet_gov::{Module, Call, Config<T>, Storage, Event<T>},
 	}
 );
 

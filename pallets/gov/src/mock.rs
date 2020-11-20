@@ -1,10 +1,12 @@
 use crate::{Module, Trait};
-use sp_core::H256;
 use frame_support::{impl_outer_origin, parameter_types, weights::Weight};
-use sp_runtime::{
-	traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill,
-};
 use frame_system as system;
+use sp_core::H256;
+use sp_runtime::{
+	testing::Header,
+	traits::{BlakeTwo256, IdentityLookup},
+	Perbill,
+};
 
 impl_outer_origin! {
 	pub enum Origin for Test {}
@@ -42,7 +44,7 @@ impl system::Trait for Test {
 	type MaximumBlockLength = MaximumBlockLength;
 	type AvailableBlockRatio = AvailableBlockRatio;
 	type Version = ();
-	type ModuleToIndex = ();
+	type PalletInfo = ();
 	type AccountData = pallet_balances::AccountData<u64>;
 	type OnNewAccount = ();
 	type OnKilledAccount = ();
@@ -62,6 +64,7 @@ impl pallet_timestamp::Trait for Test {
 }
 
 impl pallet_balances::Trait for Test {
+	type MaxLocks = ();
 	type Balance = u64;
 	type DustRemoval = ();
 	type Event = ();
@@ -82,7 +85,7 @@ impl Trait for Test {
 	type VoteBlockTime = VoteBlockTime;
 }
 
-pub type System = frame_system::Module<Test>;
+// pub type System = frame_system::Module<Test>;
 pub type Balances = pallet_balances::Module<Test>;
 pub type Timestamp = pallet_timestamp::Module<Test>;
 pub type Issue = pallet_issue::Module<Test>;
@@ -90,17 +93,24 @@ pub type GovModule = Module<Test>;
 
 // Build genesis storage according to the mock runtime.
 pub fn new_test_ext() -> sp_io::TestExternalities {
-	let mut t = system::GenesisConfig::default().build_storage::<Test>().unwrap();
+	let mut t = system::GenesisConfig::default()
+		.build_storage::<Test>()
+		.unwrap();
+	crate::GenesisConfig::<Test> { vote_period: 2 }
+		.assimilate_storage(&mut t)
+		.unwrap();
 	pallet_balances::GenesisConfig::<Test> {
-		balances: vec![
-				(10, 50),
-				(20, 50),
-				(30, 50)],
-	}.assimilate_storage(&mut t).unwrap();
+		balances: vec![(10, 50), (20, 50), (30, 50)],
+	}
+	.assimilate_storage(&mut t)
+	.unwrap();
 	pallet_issue::GenesisConfig::<Test> {
-		stgs: vec![
-			(vec![0u8], 50),
-			(vec![1u8], 50)],
-	}.assimilate_storage(&mut t).unwrap();
+		stgs: vec![(vec![0u8], 50), (vec![1u8], 50)],
+		operate_account: b"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+			.as_ref()
+			.into(),
+	}
+	.assimilate_storage(&mut t)
+	.unwrap();
 	t.into()
 }

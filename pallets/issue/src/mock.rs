@@ -42,7 +42,7 @@ impl system::Trait for Test {
 	type MaximumBlockLength = MaximumBlockLength;
 	type AvailableBlockRatio = AvailableBlockRatio;
 	type Version = ();
-	type ModuleToIndex = ();
+	type PalletInfo = ();
 	type AccountData = pallet_balances::AccountData<u64>;
 	type OnNewAccount = ();
 	type OnKilledAccount = ();
@@ -54,6 +54,7 @@ parameter_types! {
 }
 
 impl pallet_balances::Trait for Test {
+	type MaxLocks = ();
 	type Balance = u64;
 	type DustRemoval = ();
 	type Event = ();
@@ -77,11 +78,18 @@ pub fn mock_stages() -> Vec<(Vec<u8>, u64)> {
 		(vec![1u8], 50)]
 }
 
+pub fn mock_operate_account() -> Vec<u8> {
+	b"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+			.as_ref()
+			.into()
+}
+
 // Build genesis storage according to the mock runtime.
 pub fn new_test_ext() -> sp_io::TestExternalities {
 	let mut t = system::GenesisConfig::default().build_storage::<Test>().unwrap();
 	crate::GenesisConfig::<Test> {
 		stgs: mock_stages(),
+		operate_account: mock_operate_account()
 	}.assimilate_storage(&mut t).unwrap();
 	t.into()
 }

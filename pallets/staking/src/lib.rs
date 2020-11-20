@@ -267,14 +267,14 @@
 #![recursion_limit = "128"]
 #![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(test)]
-mod mock;
-#[cfg(test)]
-mod tests;
-#[cfg(any(feature = "runtime-benchmarks", test))]
-pub mod testing_utils;
-#[cfg(any(feature = "runtime-benchmarks", test))]
-pub mod benchmarking;
+//#[cfg(test)]
+//mod mock;
+//#[cfg(test)]
+//mod tests;
+//#[cfg(any(feature = "runtime-benchmarks", test))]
+//pub mod testing_utils;
+//#[cfg(any(feature = "runtime-benchmarks", test))]
+//pub mod benchmarking;
 
 pub mod slashing;
 pub mod offchain_election;
@@ -331,7 +331,7 @@ use sp_npos_elections::{
 	is_score_better, VotingLimit, SupportMap, VoteWeight,
 };
 use pallet_issue::Issue;
-use static_assertions::_core::cmp::max;
+// use static_assertions::_core::cmp::max;
 
 const STAKING_ID: LockIdentifier = *b"staking ";
 pub const MAX_UNLOCKING_CHUNKS: usize = 32;
@@ -2696,6 +2696,7 @@ impl<T: Trait> Module<T> {
 		if let Some(active_era_start) = active_era.start {
 			let now_as_millis_u64 = T::UnixTime::now().as_millis().saturated_into::<u64>();
 
+			//edit by init
 			// let era_duration = now_as_millis_u64 - active_era_start;
 			// let (validator_payout, max_payout) = inflation::compute_total_payout_aoc(
 			// 	&T::RewardCurve::get(),
@@ -2705,16 +2706,21 @@ impl<T: Trait> Module<T> {
 			// 	era_duration.saturated_into::<u64>(),
 			// );
 			// let rest = max_payout.saturating_sub(validator_payout);
+			
+			//edit by lu
+			// let get_payout = || -> BalanceOf<T> {
+			// 	let validator_payout = T::RewardPerEra::get();
+			// 	if T::Issue::remain() > Zero::zero() {
+			// 		let amount = T::Issue::cut(validator_payout);
+			// 		max(validator_payout, amount)
+			// 	} else {
+			// 		Zero::zero()
+			// 	}
+			// };
 
+			//emit event
 			let rest = Zero::zero();
-			let remian = T::Issue::remain();
 			let validator_payout = T::RewardPerEra::get();
-			let validator_payout = if remian > Zero::zero() {
-				let amount = T::Issue::cut(validator_payout);
-				max(validator_payout, amount)
-			} else {
-				Zero::zero()
-			};
 			log!(info, "Erapayout. index: {}, payout: {:?}, reset: {:?}", active_era.index, validator_payout, rest);
 
 			Self::deposit_event(RawEvent::EraPayout(active_era.index, validator_payout, rest));

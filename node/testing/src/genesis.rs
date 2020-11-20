@@ -111,5 +111,6 @@ pub fn config_endowed(
 		pallet_sudo: Some(Default::default()),
 		pallet_evm: Some(Default::default()),
 		pallet_issue: Some(Default::default()),
+		pallet_gov: Some(Default::default()),
 	}
 }

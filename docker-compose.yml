@@ -10,7 +10,7 @@ services:
     environment:
       - CARGO_HOME=/var/www/aow/.cargo
     volumes:
-      - .:/var/www/aoc
+      - .:/var/www/aow
       - type: bind
         source: ./.local
         target: /root/.local
